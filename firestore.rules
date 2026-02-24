@@ -1,0 +1,78 @@
+// ════════════════════════════════════════════════════════════════════════════
+// firestore.rules
+// Bahaar Fishing AI — Firestore security rules
+// ════════════════════════════════════════════════════════════════════════════
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── Helper functions ──────────────────────────────────────────────────
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    function isAdmin() {
+      return isAuthenticated() && request.auth.token.isAdmin == true;
+    }
+
+    // ── Users ─────────────────────────────────────────────────────────────
+    match /users/{userId} {
+      allow read:  if isAuthenticated();
+      allow write: if isOwner(userId) || isAdmin();
+    }
+
+    // ── Fishing spots — public read, admin write ──────────────────────────
+    match /fishing_spots/{spotId} {
+      allow read:  if true;
+      allow write: if isAdmin();
+    }
+
+    // ── Spot candidates — authenticated read, backend write ───────────────
+    match /spot_candidates/{candidateId} {
+      allow read:  if isAuthenticated();
+      allow write: if false;   // Written by Flask backend with Admin SDK only
+    }
+
+    // ── User reports — authenticated write, public read ───────────────────
+    match /user_reports/{reportId} {
+      allow read:  if true;
+      // Users can write, but only for their own uid
+      allow create: if isAuthenticated()
+                    && request.resource.data.user_id == request.auth.uid;
+      allow update, delete: if false;  // Immutable once written
+    }
+
+    // ── AI weights — public read, backend write only ──────────────────────
+    match /ai_weights/{weightId} {
+      allow read:  if true;
+      allow write: if false;   // Written by Flask backend Admin SDK only
+    }
+
+    // ── Learning log — backend write only ────────────────────────────────
+    match /learning_log/{logId} {
+      allow read:  if isAdmin();
+      allow write: if false;
+    }
+
+    // ── Listings (marketplace) ────────────────────────────────────────────
+    match /listings/{listingId} {
+      allow read:  if true;
+      allow create: if isAuthenticated();
+      allow update, delete: if isOwner(resource.data.seller_id) || isAdmin();
+    }
+
+    // ── Orders ────────────────────────────────────────────────────────────
+    match /orders/{orderId} {
+      allow read:  if isAuthenticated()
+                   && (resource.data.buyer_id  == request.auth.uid
+                    || resource.data.seller_id == request.auth.uid
+                    || isAdmin());
+      allow create: if isAuthenticated();
+      allow update: if isOwner(resource.data.seller_id)
+                    || isOwner(resource.data.buyer_id)
+                    || isAdmin();
+    }
+  }
+}

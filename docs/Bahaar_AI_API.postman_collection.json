@@ -1,0 +1,205 @@
+{
+  "info": {
+    "name": "Bahaar Fishing AI API",
+    "description": "Complete collection for Bahaar fishing prediction backend.\nBase URL: https://bahaar-fishing-ai.onrender.com\n\nTo run locally: change {{base_url}} variable to http://localhost:5000",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "https://bahaar-fishing-ai.onrender.com" }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/health",
+        "description": "Verify the server is running."
+      }
+    },
+    {
+      "name": "List Species",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/species",
+        "description": "Get all 11 supported species with Arabic names, peak months, and prices."
+      }
+    },
+    {
+      "name": "Predict — Hamour (Northern, Peak Season)",
+      "request": {
+        "method": "POST",
+        "url": "{{base_url}}/predict",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"lat\": 26.45,\n  \"lng\": 50.52,\n  \"species_id\": \"hamour\",\n  \"month\": 10,\n  \"temp\": 26.0,\n  \"wind\": 10.0,\n  \"fetch_weather\": false\n}"
+        },
+        "description": "Predict hamour probability at Fasht Al-Jarim in October with good conditions. Expect probability > 50."
+      }
+    },
+    {
+      "name": "Predict — Shrimp (Eastern, Peak)",
+      "request": {
+        "method": "POST",
+        "url": "{{base_url}}/predict",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"lat\": 25.92,\n  \"lng\": 50.65,\n  \"species_id\": \"shrimp\",\n  \"month\": 7,\n  \"temp\": 31.0,\n  \"wind\": 8.0,\n  \"fetch_weather\": false\n}"
+        },
+        "description": "Shrimp at Fasht Al-Azm in July. Should show high probability for eastern zone."
+      }
+    },
+    {
+      "name": "Predict — Inside Hawar MPA (Blocked)",
+      "request": {
+        "method": "POST",
+        "url": "{{base_url}}/predict",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"lat\": 25.6667,\n  \"lng\": 50.7667,\n  \"species_id\": \"hamour\",\n  \"month\": 10\n}"
+        },
+        "description": "Location inside Hawar Islands MPA. Expect mpa_blocked=true and probability ≤ 10."
+      }
+    },
+    {
+      "name": "Predict — Live Weather (Real API Call)",
+      "request": {
+        "method": "POST",
+        "url": "{{base_url}}/predict",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"lat\": 26.22,\n  \"lng\": 50.58,\n  \"species_id\": \"kanad\",\n  \"fetch_weather\": true\n}"
+        },
+        "description": "Fetch live weather from Open-Meteo and use it in prediction."
+      }
+    },
+    {
+      "name": "Submit Report — Success",
+      "request": {
+        "method": "POST",
+        "url": "{{base_url}}/report",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"user_id\": \"test_user_001\",\n  \"lat\": 26.45,\n  \"lng\": 50.52,\n  \"species_id\": \"hamour\",\n  \"success_rating\": 4,\n  \"quantity\": 3.5,\n  \"method\": \"gargoor\",\n  \"predicted_probability\": 62.0,\n  \"notes\": \"صيد جيد في الصباح الباكر\"\n}"
+        },
+        "description": "Good catch report. Should trigger weight increase since actual > predicted."
+      }
+    },
+    {
+      "name": "Submit Report — Poor Catch",
+      "request": {
+        "method": "POST",
+        "url": "{{base_url}}/report",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"user_id\": \"test_user_002\",\n  \"lat\": 26.45,\n  \"lng\": 50.52,\n  \"species_id\": \"hamour\",\n  \"success_rating\": 2,\n  \"quantity\": 0.5,\n  \"method\": \"hook_and_line\",\n  \"predicted_probability\": 75.0\n}"
+        },
+        "description": "Poor catch when we predicted high. Should reduce weight."
+      }
+    },
+    {
+      "name": "Nearby Spots — Manama (10km)",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/spots/nearby?lat=26.22&lng=50.58&radius=10",
+          "query": [
+            { "key": "lat",    "value": "26.22" },
+            { "key": "lng",    "value": "50.58" },
+            { "key": "radius", "value": "10"    }
+          ]
+        },
+        "description": "All spots within 10 km of Manama center."
+      }
+    },
+    {
+      "name": "Nearby Spots — Shrimp Only",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/spots/nearby?lat=25.92&lng=50.65&radius=15&species=shrimp",
+          "query": [
+            { "key": "lat",     "value": "25.92"  },
+            { "key": "lng",     "value": "50.65"  },
+            { "key": "radius",  "value": "15"     },
+            { "key": "species", "value": "shrimp" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Zone Info — Northern",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/zone/info?lat=26.45&lng=50.52",
+          "query": [
+            { "key": "lat", "value": "26.45" },
+            { "key": "lng", "value": "50.52" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Zone Info — Near MPA",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/zone/info?lat=26.17&lng=50.57",
+          "query": [
+            { "key": "lat", "value": "26.17" },
+            { "key": "lng", "value": "50.57" }
+          ]
+        },
+        "description": "Near Tubli Bay MPA. Should return nearby_mpas with restriction info."
+      }
+    },
+    {
+      "name": "Seasonal Advice — Hamour October",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/seasonal/advice?species_id=hamour&month=10",
+          "query": [
+            { "key": "species_id", "value": "hamour" },
+            { "key": "month",      "value": "10"     }
+          ]
+        },
+        "description": "Peak season. Expect is_peak_season=true and factor > 1.0."
+      }
+    },
+    {
+      "name": "Seasonal Advice — Shrimp February (Off-Season)",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/seasonal/advice?species_id=shrimp&month=2",
+          "query": [
+            { "key": "species_id", "value": "shrimp" },
+            { "key": "month",      "value": "2"      }
+          ]
+        },
+        "description": "Off-season. Expect factor < 0.3 and advice to try alternatives."
+      }
+    },
+    {
+      "name": "Weather + Safety",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/weather?lat=26.22&lng=50.58",
+          "query": [
+            { "key": "lat", "value": "26.22" },
+            { "key": "lng", "value": "50.58" }
+          ]
+        },
+        "description": "Get current weather and maritime safety level for Bahrain."
+      }
+    }
+  ]
+}

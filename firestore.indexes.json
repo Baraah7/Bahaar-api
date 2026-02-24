@@ -1,0 +1,46 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "user_reports",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "species_id",  "order": "ASCENDING" },
+        { "fieldPath": "timestamp",   "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "user_reports",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "species_id",  "order": "ASCENDING" },
+        { "fieldPath": "lat",         "order": "ASCENDING" },
+        { "fieldPath": "timestamp",   "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "fishing_spots",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "zone",       "order": "ASCENDING" },
+        { "fieldPath": "confidence", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "spot_candidates",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "status",     "order": "ASCENDING" },
+        { "fieldPath": "created_at", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "learning_log",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "species",   "order": "ASCENDING" },
+        { "fieldPath": "timestamp", "order": "DESCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

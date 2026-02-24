@@ -1,0 +1,34 @@
+# render.yaml
+# Bahaar Fishing AI API — Render.com deployment
+# Deploy: connect GitHub repo → Render detects this file automatically.
+
+services:
+  - type: web
+    name: bahaar-fishing-ai
+    runtime: python
+    region: singapore   # Closest to Bahrain (Mumbai not available on free tier)
+    plan: free          # Upgrade to starter ($7/mo) for always-on
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn api:app --workers 2 --timeout 60 --bind 0.0.0.0:$PORT
+    healthCheckPath: /health
+
+    envVars:
+      # Firebase credentials — set these in Render dashboard, NOT here
+      - key: FIREBASE_PROJECT_ID
+        sync: false
+      - key: FIREBASE_PRIVATE_KEY
+        sync: false          # Paste the full private key (multi-line OK in Render)
+      - key: FIREBASE_CLIENT_EMAIL
+        sync: false
+
+      # Learning tuning
+      - key: LEARNING_RATE
+        value: "0.05"
+      - key: CONFIDENCE_THRESHOLD
+        value: "0.7"
+
+      # Flask
+      - key: FLASK_ENV
+        value: "production"
+      - key: PORT
+        value: "10000"
