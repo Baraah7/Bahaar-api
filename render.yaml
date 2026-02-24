@@ -1,6 +1,8 @@
 # render.yaml
 # Bahaar Fishing AI API — Render.com deployment
 # Deploy: connect GitHub repo → Render detects this file automatically.
+# startCommand: gunicorn api:app --workers 2 --timeout 60 --bind 0.0.0.0:$PORT
+
 
 services:
   - type: web
@@ -9,7 +11,7 @@ services:
     region: singapore   # Closest to Bahrain (Mumbai not available on free tier)
     plan: free          # Upgrade to starter ($7/mo) for always-on
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn api:app --workers 2 --timeout 60 --bind 0.0.0.0:$PORT
+    startCommand: python seed_firebase.py && gunicorn api:app --workers 2 --timeout 60 --bind 0.0.0.0:$PORT
     healthCheckPath: /health
 
     envVars:

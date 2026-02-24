@@ -552,3 +552,22 @@ FISHING_SPOTS: List[Dict[str, Any]] = [
         "base_score": 55,
     },
 ]
+
+#not realy sure about it ;)
+# ──────────────────────────────────────────────────────────────────────────────
+# DEFAULT STATIC AI WEIGHTS
+# Used to initialize Firestore ai_weights/static
+# Combines zone productivity and species zone preference
+# ──────────────────────────────────────────────────────────────────────────────
+
+DEFAULT_STATIC_WEIGHTS: Dict[str, float] = {}
+
+# generate default weight per species per zone
+for species_id, species_data in SPECIES.items():
+    zone_weights = species_data.get("zone_weights", {})
+    for zone_id, zone_data in ZONES.items():
+        base = zone_data.get("base_weight", 1.0)
+        species_factor = zone_weights.get(zone_id, 1.0)
+
+        key = f"{species_id}_{zone_id}"
+        DEFAULT_STATIC_WEIGHTS[key] = round(base * species_factor, 3)
