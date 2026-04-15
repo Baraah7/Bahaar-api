@@ -568,6 +568,27 @@ for species_id, species_data in SPECIES.items():
     for zone_id, zone_data in ZONES.items():
         base = zone_data.get("base_weight", 1.0)
         species_factor = zone_weights.get(zone_id, 1.0)
-
-        key = f"{species_id}_{zone_id}"
+        
+        # Correct key format: zone_species (e.g., northern_hamour)
+        key = f"{zone_id}_{species_id}"
         DEFAULT_STATIC_WEIGHTS[key] = round(base * species_factor, 3)
+
+# ──────────────────────────────────────────────────────────────────────────────
+# DEFAULT SEASONAL FACTORS
+# Used to initialize Firestore seasonal_factors collection
+# ──────────────────────────────────────────────────────────────────────────────
+
+DEFAULT_SEASONAL_FACTORS: Dict[str, List[float]] = {}
+
+for species_id, species_data in SPECIES.items():
+    seasonal = species_data.get("seasonal", [1.0] * 12)
+    if len(seasonal) == 12:
+        DEFAULT_SEASONAL_FACTORS[species_id] = seasonal
+    else:
+        DEFAULT_SEASONAL_FACTORS[species_id] = [1.0] * 12
+
+# ──────────────────────────────────────────────────────────────────────────────
+# ALIASES
+# ──────────────────────────────────────────────────────────────────────────────
+
+MPAS = MPA_ZONES
