@@ -223,7 +223,7 @@ SPECIES: Dict[str, Dict[str, Any]] = {
         "price_bd_per_kg": 5.0,
     },
     "emperor": {
-        "name_ar": "قسيمة",
+        "name_ar": "شعري",
         "name_en": "Spangled Emperor",
         "scientific": "Lethrinus nebulosus",
         "temp_min": 22, "temp_max": 31,
@@ -239,7 +239,7 @@ SPECIES: Dict[str, Dict[str, Any]] = {
         "price_bd_per_kg": 3.8,
     },
     "bream": {
-        "name_ar": "جحش / صبيطي",
+        "name_ar": "شعوم",
         "name_en": "Sea Bream (Sobaity)",
         "scientific": "Sparidentex hasta",
         "temp_min": 18, "temp_max": 32,
@@ -318,6 +318,26 @@ SPECIES: Dict[str, Dict[str, Any]] = {
         "best_methods": ["squid_jig", "cast_net", "trap"],
         "price_bd_per_kg": 4.0,
     },
+    {
+    "silver_pomfret": {
+        "name_ar": "زبيدي",
+        "name_en": "Silver Pomfret",
+        "scientific": "Pampus argenteus",
+        "temp_min": 20, 
+        "temp_max": 30,
+        "wind_max": 20,
+        "depth_min": 5, 
+        "depth_max": 110,
+        "bottom_pref": ["muddy", "sandy"],
+        "zone_weights": {"northern": 1.0, "eastern": 1.1, "western": 0.8, "southern": 0.7},
+        "seasonal": [0.6, 0.6, 0.8, 1.5, 1.5, 1.2, 0.8, 0.7, 0.7, 0.9, 1.1, 0.8],
+        "peak_months": [4, 5, 6],
+        "peak_advice_ar": "يتواجد في مجموعات على القيعان الطينية. موسم الذروة من أبريل إلى يونيو. يتم بيعه طازجاً في الأسواق المحلية.",
+        "peak_advice_en": "Found in schools over muddy bottoms. Peak season from April to June. Sold fresh in local markets.",
+        "best_methods": ["gillnet", "trawl", "hook_and_line"],
+        "price_bd_per_kg": 3.5
+    }
+}
 }
 
 # ──────────────────────────────────────────────────────────────────────────────
