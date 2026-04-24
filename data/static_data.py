@@ -337,7 +337,7 @@ SPECIES: Dict[str, Dict[str, Any]] = {
         "best_methods": ["gillnet", "trawl", "hook_and_line"],
         "price_bd_per_kg": 3.5
     }
-}
+
 }
 
 # ──────────────────────────────────────────────────────────────────────────────
