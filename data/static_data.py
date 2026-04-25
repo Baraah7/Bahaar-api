@@ -318,7 +318,7 @@ SPECIES: Dict[str, Dict[str, Any]] = {
         "best_methods": ["squid_jig", "cast_net", "trap"],
         "price_bd_per_kg": 4.0,
     },
-    {
+    
     "silver_pomfret": {
         "name_ar": "زبيدي",
         "name_en": "Silver Pomfret",
@@ -570,7 +570,7 @@ FISHING_SPOTS: List[Dict[str, Any]] = [
         "source": "mybahrain.net; Community",
         "mpa": False,
         "base_score": 55,
-    },
+    }
 ]
 
 #not realy sure about it ;)
